@@ -2,11 +2,16 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Calcular Nota Final</title>
-    <script src="notaFinal.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creador de Curso</title>
+    <script src="curso.js" defer></script>
 </head>
 <body>
-    <h1>Calcular Nota Final de Alumnos</h1>
-    <button onclick="calcularNotaFinal()">Calcular Nota Final</button>
+    <h1>Creador de Curso</h1>
+    <button onclick="agregarAlumno()">Agregar Alumno</button>
+    <button onclick="listarAlumnos()">Listar Alumnos</button>
+    <button onclick="buscarAlumnoPorDNI(prompt('Ingrese el DNI a buscar:'))">Buscar por DNI</button>
+    <button onclick="eliminarAlumnoPorDNI(prompt('Ingrese el DNI a eliminar:'))">Eliminar por DNI</button>
+    <button onclick="contarAlumnos()">Contar Alumnos</button>
 </body>
 </html>
