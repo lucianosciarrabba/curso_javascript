@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creador de Curso</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .navbar {
+            background-color: #0057a0; /* Azul oscuro */
+        }
+
+        .navbar-brand {
+            color: #ffffff;
+            display: flex;
+            padding-top: .3125rem;
+            padding-bottom: .3125rem;
+            margin-right: 1rem;
+            font-size: 1.25rem;
+            line-height: inherit;
+            white-space: nowrap;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .navbar-brand img {
+            max-height: 100px;
+        }
+
+        .footer {
+            background-color: #0057a0; /* Azul oscuro */
+            color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 0.875rem;
+            position: absolute;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .footer a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra superior (navbar) -->
+    <nav class="navbar navbar-light">
+        <a class="navbar-brand" href="#">
+            <img src="logo.png" alt="Logo">
+        </a>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>Creador de Curso</h1>
+        <form id="formAlumno">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control" id="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="apellido">Apellido</label>
+                <input type="text" class="form-control" id="apellido" required>
+            </div>
+            <div class="form-group">
+                <label for="dni">DNI</label>
+                <input type="text" class="form-control" id="dni" required>
+            </div>
+            <div class="form-group">
+                <label for="genero">Género</label>
+                <select class="form-control" id="genero" required>
+                    <option value="">Seleccionar</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar Alumno</button>
+        </form>
+
+        <div class="mt-4">
+            <button class="btn btn-secondary" onclick="actualizarTabla()">Actualizar Tabla</button>
+            <button class="btn btn-secondary" onclick="buscarAlumno()">Buscar Alumno por DNI</button> <!-- Nuevo botón -->
+            <button class="btn btn-secondary" onclick="contarAlumnos()">Contar Alumnos</button>
+
+            <div class="dropdown d-inline">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="filtroDropdown">
+                    Filtros
+                </button>
+                <div class="dropdown-menu" aria-labelledby="filtroDropdown">
+                    <a class="dropdown-item" href="#" onclick="ordenarPor('nombre')">Ordenar por Nombre</a>
+                    <a class="dropdown-item" href="#" onclick="ordenarPor('apellido')">Ordenar por Apellido</a>
+                    <a class="dropdown-item" href="#" onclick="ordenarPor('dni')">Ordenar por DNI</a>
+                    <a class="dropdown-item" href="#" onclick="filtrarGenero('Masculino')">Mostrar Masculinos</a>
+                    <a class="dropdown-item" href="#" onclick="filtrarGenero('Femenino')">Mostrar Femeninos</a>
+                    <a class="dropdown-item" href="#" onclick="actualizarTabla()">Mostrar Todos</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>DNI</th>
+                        <th>Género</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaAlumnos"></tbody>
+            </table>
+        </div>
+
+        <div class="mt-4">
+            <h3 id="totalAlumnos">Total de alumnos: 0</h3>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Programa de Gestión de Alumnos - Todos los derechos reservados.</p>
+        <p><a href="#">Política de Privacidad</a> | <a href="#">Términos y Condiciones</a></p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="curso.js"></script>
+    <script>
+        document.getElementById('filtroDropdown').addEventListener('click', function () {
+            const menu = document.querySelector('.dropdown-menu');
+            menu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.dropdown')) {
+                const menu = document.querySelector('.dropdown-menu');
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
