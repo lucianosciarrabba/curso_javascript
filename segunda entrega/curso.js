@@ -1,5 +1,5 @@
 // Declaración del array que almacenará los alumnos
-let Curso = [];
+let curso = [];
 
 // Función para agregar un nuevo alumno al array
 function agregarAlumno() {
@@ -14,8 +14,8 @@ function agregarAlumno() {
         dni: dni
     };
 
-    // Agregar alumno al array Curso
-    Curso.push(alumno);
+    // Agregar alumno al array curso
+    curso.push(alumno);
 
     alert("Alumno agregado correctamente.");
 }
@@ -24,7 +24,7 @@ function agregarAlumno() {
 function listarAlumnos() {
     let mensaje = "Listado de alumnos:\n";
 
-    Curso.forEach(function(alumno) {
+    curso.forEach(function(alumno) {
         mensaje += `Nombre: ${alumno.nombre} ${alumno.apellido}, DNI: ${alumno.dni}\n`;
     });
 
@@ -34,7 +34,7 @@ function listarAlumnos() {
 
 //Función para buscar alumno por DNI
 function buscarAlumnoPorDNI(dniBuscado) {
-    let encontrado = Curso.find(function(alumno) {
+    let encontrado = curso.find(function(alumno) {
         return alumno.dni === dniBuscado;
     });
 
@@ -47,12 +47,12 @@ function buscarAlumnoPorDNI(dniBuscado) {
 
 //Función para eliminar alumno
 function eliminarAlumnoPorDNI(dniEliminar) {
-    let indice = Curso.findIndex(function(alumno) {
+    let indice = curso.findIndex(function(alumno) {
         return alumno.dni === dniEliminar;
     });
 
     if (indice !== -1) {
-        let alumnoEliminado = Curso.splice(indice, 1)[0];
+        let alumnoEliminado = curso.splice(indice, 1)[0];
         alert(`Alumno eliminado: ${alumnoEliminado.nombre} ${alumnoEliminado.apellido}, DNI: ${alumnoEliminado.dni}`);
     } else {
         alert("Alumno no encontrado para eliminar.");
@@ -62,7 +62,7 @@ function eliminarAlumnoPorDNI(dniEliminar) {
 //Función contar cantidad de alumnos
 
 function contarAlumnos() {
-    let cantidad = Curso.length;
+    let cantidad = curso.length;
     alert(`Cantidad de alumnos en el curso: ${cantidad}`);
 }
 
