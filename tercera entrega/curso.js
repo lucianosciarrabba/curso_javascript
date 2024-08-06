@@ -21,35 +21,31 @@ document.getElementById('formAlumno').addEventListener('submit', function (e) {
     this.reset();
 });
 
-document.getElementById('actualizarTablaBtn').addEventListener('click', actualizarTabla);
-document.getElementById('contarAlumnosBtn').addEventListener('click', contarAlumnos);
-document.getElementById('buscarPorDniBtn').addEventListener('click', function() {
-    const dni = prompt('Ingrese el DNI del alumno que desea buscar:');
-    if (dni) {
-        filtrarPorDni(dni);
-    }
-});
-
-document.querySelectorAll('.dropdown-item[data-filtro]').forEach(item => {
-    item.addEventListener('click', function() {
-        const filtro = this.getAttribute('data-filtro');
-        ordenarPor(filtro);
+function buscarAlumno() {
+    Swal.fire({
+        title: 'Buscar Alumno',
+        input: 'text',
+        inputPlaceholder: 'Ingrese el DNI del alumno',
+        showCancelButton: true,
+        confirmButtonText: 'Buscar',
+        cancelButtonText: 'Cancelar',
+        inputValidator: (value) => {
+            if (!value) {
+                return '¡Por favor ingrese un DNI!';
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const dni = result.value;
+            filtrarPorDni(dni);
+        }
     });
-});
-
-document.querySelectorAll('.dropdown-item[data-genero]').forEach(item => {
-    item.addEventListener('click', function() {
-        const genero = this.getAttribute('data-genero');
-        filtrarGenero(genero);
-    });
-});
-
-document.getElementById('mostrarTodos').addEventListener('click', actualizarTabla);
+}
 
 function actualizarTabla() {
     const tabla = document.getElementById('tablaAlumnos');
     tabla.innerHTML = '';
-    curso.forEach((alumno, index) => {
+    curso.forEach((alumno) => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${alumno.nombre}</td>
@@ -57,26 +53,19 @@ function actualizarTabla() {
             <td>${alumno.dni}</td>
             <td>${alumno.genero}</td>
             <td>
-                <button class="btn btn-warning btn-sm editar-btn" data-id="${alumno.id}">Editar</button>
-                <button class="btn btn-danger btn-sm eliminar-btn" data-id="${alumno.id}">Eliminar</button>
+                <button class="btn btn-warning btn-sm editar-btn">Editar</button>
+                <button class="btn btn-danger btn-sm eliminar-btn">Eliminar</button>
             </td>
         `;
         tabla.appendChild(row);
-    });
 
-    document.querySelectorAll('.editar-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            editarAlumno(id);
+        // Agregar eventos a los botones después de que se crean
+        row.querySelector('.editar-btn').addEventListener('click', function() {
+            editarAlumno(alumno.id);
         });
-    });
 
-    document.querySelectorAll('.eliminar-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            if (confirm('¿Estás seguro de que quieres borrar el alumno?')) {
-                eliminarAlumno(id);
-            }
+        row.querySelector('.eliminar-btn').addEventListener('click', function() {
+            eliminarAlumno(alumno.id);
         });
     });
 
@@ -95,42 +84,54 @@ function editarAlumno(id) {
 }
 
 function eliminarAlumno(id) {
-    curso = curso.filter(alumno => alumno.id !== id);
-    localStorage.setItem('curso', JSON.stringify(curso));
-    actualizarTabla();
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás deshacer esta acción!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            curso = curso.filter(alumno => alumno.id !== id);
+            localStorage.setItem('curso', JSON.stringify(curso));
+            actualizarTabla();
+            Swal.fire('¡Eliminado!', 'El alumno ha sido eliminado.', 'success');
+        }
+    });
 }
 
 function contarAlumnos() {
-    alert(`Total de alumnos: ${curso.length}`);
+    Swal.fire(`Total de alumnos: ${curso.length}`);
 }
 
-function ordenarPor(filtro) {
-    curso.sort((a, b) => {
-        if (a[filtro] < b[filtro]) {
-            return -1;
-        } else if (a[filtro] > b[filtro]) {
-            return 1;
-        } else {
-            return 0;
-        }
-    });
+function filtrarPorDni(dni) {
+    const alumno = curso.find(alumno => alumno.dni === dni);
+    if (alumno) {
+        Swal.fire({
+            title: 'Alumno encontrado',
+            text: `Nombre: ${alumno.nombre}, Apellido: ${alumno.apellido}, Género: ${alumno.genero}`,
+            icon: 'info'
+        });
+    } else {
+        Swal.fire({
+            title: 'No encontrado',
+            text: 'No se encontró ningún alumno con ese DNI.',
+            icon: 'error'
+        });
+    }
+}
+
+function ordenarPor(propiedad) {
+    curso.sort((a, b) => a[propiedad].localeCompare(b[propiedad]));
     actualizarTabla();
 }
 
 function filtrarGenero(genero) {
-    const alumnosFiltrados = curso.filter(alumno => alumno.genero === genero);
-    mostrarAlumnos(alumnosFiltrados);
-}
-
-function filtrarPorDni(dni) {
-    const alumnoFiltrado = curso.filter(alumno => alumno.dni === dni);
-    mostrarAlumnos(alumnoFiltrado);
-}
-
-function mostrarAlumnos(alumnos) {
     const tabla = document.getElementById('tablaAlumnos');
     tabla.innerHTML = '';
-    alumnos.forEach((alumno, index) => {
+    const resultados = curso.filter(alumno => alumno.genero === genero);
+    resultados.forEach(alumno => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${alumno.nombre}</td>
@@ -138,26 +139,19 @@ function mostrarAlumnos(alumnos) {
             <td>${alumno.dni}</td>
             <td>${alumno.genero}</td>
             <td>
-                <button class="btn btn-warning btn-sm editar-btn" data-id="${alumno.id}">Editar</button>
-                <button class="btn btn-danger btn-sm eliminar-btn" data-id="${alumno.id}">Eliminar</button>
+                <button class="btn btn-warning btn-sm editar-btn">Editar</button>
+                <button class="btn btn-danger btn-sm eliminar-btn">Eliminar</button>
             </td>
         `;
         tabla.appendChild(row);
-    });
 
-    document.querySelectorAll('.editar-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            editarAlumno(id);
+        // Agregar eventos a los botones después de que se crean
+        row.querySelector('.editar-btn').addEventListener('click', function() {
+            editarAlumno(alumno.id);
         });
-    });
 
-    document.querySelectorAll('.eliminar-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            if (confirm('¿Estás seguro de que quieres borrar el alumno?')) {
-                eliminarAlumno(id);
-            }
+        row.querySelector('.eliminar-btn').addEventListener('click', function() {
+            eliminarAlumno(alumno.id);
         });
     });
 }
