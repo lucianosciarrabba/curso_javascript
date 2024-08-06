@@ -49,9 +49,11 @@ function editarAlumno(index) {
 }
 
 function eliminarAlumno(index) {
-    Curso.splice(index, 1);
-    localStorage.setItem('Curso', JSON.stringify(Curso));
-    actualizarTabla();
+    if (confirm("¿Estás seguro de que quieres borrar el alumno?")) {
+        Curso.splice(index, 1);
+        localStorage.setItem('Curso', JSON.stringify(Curso));
+        actualizarTabla();
+    }
 }
 
 function contarAlumnos() {
